@@ -1,3 +1,4 @@
+from calendar import c
 import pygame
 from sudoku_solver import *
 
@@ -9,6 +10,9 @@ X_INDEX = 0
 Y_INDEX = 1
 
 # Dimensions for the creation of the sudoku grid
+GRID_SIZE = 9
+SQUARE_SIZE = math.floor(math.sqrt(GRID_SIZE))
+NUM_CELLS = GRID_SIZE ** 2
 CELL_DIMENSION = 50
 BOLD_WIDTH = 3
 LINE_WIDTH = 1
@@ -33,13 +37,14 @@ NUM_FONT = pygame.font.SysFont("Times New Roman", 40)
 # RGB form of colours
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
+GREY = (128, 128, 128)
 
 # Create the pygame display and title it
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Sudoku")
 
 
-def draw_board():
+def draw_board(clicked_cell):
     """
     Draw the grid for the sudoku
     """
@@ -70,17 +75,97 @@ def draw_board():
 
             # Update the coordinate of the reference point of the cell
             cell_coord += CELL_DIMENSION + LINE_WIDTH
+    
+    # If there is a clicked cell highlight it
+    if clicked_cell != -1:
+        highlight_cell(cell_coords(clicked_cell))
 
+ 
+def print_grid(grid):
+    """"
+    Print the cuurent state of the   grid
+    param grid: the current state of the grid in a list
+    """
+
+    print_line()
+    
+    for i in range(NUM_CELLS):
+        if not  (i % GRID_SIZE):
+            print("|", end='')
+
+        # Print each element in the row, and the outlines of the square
+        print(f" {grid[i]} ", end='')
+        if not (i + 1) % 3:
+            print("|", end='')
         
+        if not (i + 1) % GRID_SIZE:
+            print('')
+
+        # Print the horizontal lines between the boxes
+        if i and not (((i + 1) % (3 * GRID_SIZE))):
+            print_line()
 
 
-def draw_game():
+def print_line():
+    """
+    Print the seperating lines between squares on the horizontal
+    """
+    print("+", end='')
+    for i in range(GRID_SIZE):
+        print("---", end='')
+        if not (i + 1) % SQUARE_SIZE :
+            print("+", end='')
+    print('')
+
+    
+def is_grid_valid(grid):
+    """
+    Determine if the state of the grid is a valid state currently
+    param grid: the current state of the grid in a list
+    return: True if the grid is valid and False if it is not
+    """
+
+    # Preallocate memory for a hash map of rows, columns and squares
+    row_hash = numpy.zeros(NUM_CELLS)
+    column_hash = numpy.zeros(NUM_CELLS)
+    square_hash = numpy.zeros(NUM_CELLS)
+
+    # Iterate through each element in the grid
+    for i in range(NUM_CELLS):
+            if grid[i]:
+
+                # Fill in the hash map for rows and return False if the is a number that 
+                # occurs more than once
+                row_hash[GRID_SIZE * (i // GRID_SIZE) + grid[i] - 1] += 1
+                if row_hash[GRID_SIZE * (i // GRID_SIZE) + grid[i] - 1] > 1:
+                    return False
+
+                # Fill in the hash map for columns and return False if the is a number 
+                # that occurs more than once
+                column_hash[GRID_SIZE * (i % GRID_SIZE) + grid[i] - 1] += 1
+                if column_hash[GRID_SIZE * (i % GRID_SIZE) + grid[i] - 1]  > 1:
+                    return False
+
+                # Find which square the the current element is in
+                square_index = find_square_index(i)
+
+                # Fill in the hash map for squares and return False if the is a number
+                # that occurs more than once
+                square_hash[GRID_SIZE * square_index + grid[i] - 1] += 1
+                if square_hash[GRID_SIZE * square_index + grid[i] - 1] > 1:
+                    return False
+
+    # If no errors have been found return True
+    return True       
+
+
+def draw_game(clicked_cell):
     """
     Draw the display of the game
     """
 
     WIN.fill(WHITE)
-    draw_board()
+    draw_board(clicked_cell)
 
 
 def fill_grid(grid):
@@ -185,8 +270,31 @@ def find_clicked_cell(pos):
 
     # Return the cell that the click is in
     return GRID_SIZE * (y_norm // CELL_DIMENSION) + x_norm // CELL_DIMENSION
-    
 
 
-            
-    
+def cell_coords(cell):
+    """
+    Determines the top left coordinate of each cell
+    param cell: the cell number
+    return pos: returns the top left coordinate of the cell
+    """
+
+    row = cell // GRID_SIZE
+    collumn = cell % GRID_SIZE
+
+    # Calculate the number of different lines above and to the left of the cell
+    normal_lines_left = collumn - collumn // SQUARE_SIZE
+    bold_lines_left = collumn // SQUARE_SIZE
+    normal_lines_above = row - row // SQUARE_SIZE
+    bold_lines_above = row // SQUARE_SIZE
+
+    # Calculate the coordinates of the top left corner of the cell
+    x_coord = OG_X_COORD + collumn * CELL_DIMENSION + normal_lines_left * LINE_WIDTH + bold_lines_left * BOLD_WIDTH
+    y_coord = OG_Y_COORD + row * CELL_DIMENSION + normal_lines_above * LINE_WIDTH + bold_lines_above * BOLD_WIDTH
+
+    return [x_coord, y_coord]
+
+def highlight_cell(pos):
+    test_rect = pygame.Rect(pos[X_INDEX], pos[Y_INDEX], 5, 5)
+    pygame.draw.rect(WIN, GREY, test_rect)
+

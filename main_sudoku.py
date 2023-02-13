@@ -11,10 +11,11 @@ def main(grid):
     Runs the sudoku game
     params grid: the sudoku game in a list
     """
-
-    user_grid = [None] * sudoku_solver.NUM_CELLS
+    
+    clicked_cell = -1
+    user_grid = [None] * sudoku_gui.NUM_CELLS
     # Create a copy of the unfilled grid
-    for i in range(sudoku_solver.NUM_CELLS):
+    for i in range(sudoku_gui.NUM_CELLS):
         user_grid[i] = grid[i]
     
 
@@ -34,7 +35,7 @@ def main(grid):
         clock.tick(FPS)
 
         # Draw the board of the sudoku
-        sudoku_gui.draw_game()
+        sudoku_gui.draw_game(clicked_cell)
 
         # Draw the known numbers in the board
         sudoku_gui.fill_grid(user_grid)
@@ -51,6 +52,8 @@ def main(grid):
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 pos = pygame.mouse.get_pos()
                 clicked_cell = sudoku_gui.find_clicked_cell(pos)
+                #sudoku_gui.highlight_cell(sudoku_gui.cell_coords(clicked_cell))
+
 
         
         pygame.display.update()
