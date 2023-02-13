@@ -18,8 +18,6 @@ def main(grid):
     for i in range(sudoku_gui.NUM_CELLS):
         user_grid[i] = grid[i]
     
-
-
     # Solve the sudoku
     sudoku_solver.solve_sudoku(grid)
     

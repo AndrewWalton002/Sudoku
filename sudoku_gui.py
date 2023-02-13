@@ -1,4 +1,6 @@
 from calendar import c
+from tkinter.font import BOLD
+from turtle import right
 import pygame
 from sudoku_solver import *
 
@@ -284,17 +286,24 @@ def cell_coords(cell):
 
     # Calculate the number of different lines above and to the left of the cell
     normal_lines_left = collumn - collumn // SQUARE_SIZE
-    bold_lines_left = collumn // SQUARE_SIZE
+    bold_lines_left = collumn // SQUARE_SIZE + 1
     normal_lines_above = row - row // SQUARE_SIZE
-    bold_lines_above = row // SQUARE_SIZE
+    bold_lines_above = row // SQUARE_SIZE + 1
 
     # Calculate the coordinates of the top left corner of the cell
-    x_coord = OG_X_COORD + collumn * CELL_DIMENSION + normal_lines_left * LINE_WIDTH + bold_lines_left * BOLD_WIDTH
-    y_coord = OG_Y_COORD + row * CELL_DIMENSION + normal_lines_above * LINE_WIDTH + bold_lines_above * BOLD_WIDTH
+    x_coord = BOARD_PAD + collumn * CELL_DIMENSION + normal_lines_left * LINE_WIDTH + bold_lines_left * BOLD_WIDTH
+    y_coord = BOARD_PAD + row * CELL_DIMENSION + normal_lines_above * LINE_WIDTH + bold_lines_above * BOLD_WIDTH
 
     return [x_coord, y_coord]
 
 def highlight_cell(pos):
-    test_rect = pygame.Rect(pos[X_INDEX], pos[Y_INDEX], 5, 5)
-    pygame.draw.rect(WIN, GREY, test_rect)
 
+    top_rect = pygame.Rect(pos[X_INDEX], pos[Y_INDEX], CELL_DIMENSION, BOLD_WIDTH)
+    left_rect = pygame.Rect(pos[X_INDEX], pos[Y_INDEX], BOLD_WIDTH, CELL_DIMENSION)
+    bottom_rect = pygame.Rect(pos[X_INDEX], pos[Y_INDEX] + CELL_DIMENSION - BOLD_WIDTH, CELL_DIMENSION, BOLD_WIDTH)
+    right_rect = pygame.Rect(pos[X_INDEX] + CELL_DIMENSION - BOLD_WIDTH, pos[Y_INDEX], BOLD_WIDTH, CELL_DIMENSION)
+
+    pygame.draw.rect(WIN, GREY, top_rect)
+    pygame.draw.rect(WIN, GREY, left_rect)
+    pygame.draw.rect(WIN, GREY, bottom_rect)
+    pygame.draw.rect(WIN, GREY, right_rect)
