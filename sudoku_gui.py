@@ -32,6 +32,11 @@ BOARD_RIGHT_EDGE = BOARD_PAD + GRID_SIZE * CELL_DIMENSION + (NUM_BOLD_LINES - 1)
 BOARD_TOP_EDGE = BOARD_PAD + BOLD_WIDTH
 BOARD_LEFT_EDGE = BOARD_PAD + BOLD_WIDTH
 
+INPUT_RECT_COORDS = [BOARD_RIGHT_EDGE + BOARD_PAD, BOARD_PAD]
+INPUT_RECT_LEN = 100
+INPUT_RECT_HEIGHT = CELL_DIMENSION
+INPUT_TEXT_COORDS = (INPUT_RECT_COORDS[X_INDEX] + 17, INPUT_RECT_COORDS[Y_INDEX] + 3)
+
 
 # Define the fonts for sudoku
 NUM_FONT = pygame.font.SysFont("Times New Roman", 40)
@@ -80,7 +85,8 @@ def draw_board(clicked_cell):
     
     # If there is a clicked cell highlight it
     if clicked_cell != -1:
-        highlight_cell(cell_coords(clicked_cell))
+        #highlight_cell(cell_coords(clicked_cell))
+        draw_rect(cell_coords(clicked_cell), GREY, BOLD_WIDTH, CELL_DIMENSION, CELL_DIMENSION)
 
  
 def print_grid(grid):
@@ -296,14 +302,28 @@ def cell_coords(cell):
 
     return [x_coord, y_coord]
 
-def highlight_cell(pos):
+def draw_rect(pos, colour, line_width, len, height):
+    """
+    Draw a rectangle
+    param pos: the top left of the rectangle
+    param colour: the colour of rectangle
+    param line_width: the width of the outline of the rectangle
+    param len: the length of the rectangle
+    param height: the height of the rectangle
+    """
 
-    top_rect = pygame.Rect(pos[X_INDEX], pos[Y_INDEX], CELL_DIMENSION, BOLD_WIDTH)
-    left_rect = pygame.Rect(pos[X_INDEX], pos[Y_INDEX], BOLD_WIDTH, CELL_DIMENSION)
-    bottom_rect = pygame.Rect(pos[X_INDEX], pos[Y_INDEX] + CELL_DIMENSION - BOLD_WIDTH, CELL_DIMENSION, BOLD_WIDTH)
-    right_rect = pygame.Rect(pos[X_INDEX] + CELL_DIMENSION - BOLD_WIDTH, pos[Y_INDEX], BOLD_WIDTH, CELL_DIMENSION)
+    # Define the lines that outline the rectangle
+    top_rect = pygame.Rect(pos[X_INDEX], pos[Y_INDEX], len, line_width)
+    left_rect = pygame.Rect(pos[X_INDEX], pos[Y_INDEX], line_width, height)
+    bottom_rect = pygame.Rect(pos[X_INDEX], pos[Y_INDEX] + height - line_width, len, line_width)
+    right_rect = pygame.Rect(pos[X_INDEX] + len - line_width, pos[Y_INDEX], line_width, height)
 
-    pygame.draw.rect(WIN, GREY, top_rect)
-    pygame.draw.rect(WIN, GREY, left_rect)
-    pygame.draw.rect(WIN, GREY, bottom_rect)
-    pygame.draw.rect(WIN, GREY, right_rect)
+    # Draw the rectangle
+    pygame.draw.rect(WIN, colour, top_rect)
+    pygame.draw.rect(WIN, colour, left_rect)
+    pygame.draw.rect(WIN, colour, bottom_rect)
+    pygame.draw.rect(WIN, colour, right_rect)
+
+def render_user_input(user_input):
+    text = NUM_FONT.render(user_input, True, BLACK)
+    WIN.blit(text, INPUT_TEXT_COORDS)

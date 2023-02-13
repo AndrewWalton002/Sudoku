@@ -13,10 +13,13 @@ def main(grid):
     """
     
     clicked_cell = -1
+    user_input = ""
+
     user_grid = [None] * sudoku_gui.NUM_CELLS
     # Create a copy of the unfilled grid
     for i in range(sudoku_gui.NUM_CELLS):
         user_grid[i] = grid[i]
+
     
     # Solve the sudoku
     sudoku_solver.solve_sudoku(grid)
@@ -34,6 +37,9 @@ def main(grid):
 
         # Draw the board of the sudoku
         sudoku_gui.draw_game(clicked_cell)
+        sudoku_gui.draw_rect(sudoku_gui.INPUT_RECT_COORDS, sudoku_gui.BLACK, sudoku_gui.BOLD_WIDTH, sudoku_gui.INPUT_RECT_LEN, 
+                             sudoku_gui.INPUT_RECT_HEIGHT)
+        sudoku_gui.render_user_input(user_input)
 
         # Draw the known numbers in the board
         sudoku_gui.fill_grid(user_grid)
@@ -50,7 +56,15 @@ def main(grid):
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 pos = pygame.mouse.get_pos()
                 clicked_cell = sudoku_gui.find_clicked_cell(pos)
-                #sudoku_gui.highlight_cell(sudoku_gui.cell_coords(clicked_cell))
+
+            # Check if a key was pressed
+            if event.type == pygame.KEYDOWN:
+                # If backspace is pressed remove the last character
+                if event.key == pygame.K_BACKSPACE:
+                    user_input = user_input[:-1]
+                # Add the character to the user input
+                else:
+                    user_input += event.unicode 
 
 
         
