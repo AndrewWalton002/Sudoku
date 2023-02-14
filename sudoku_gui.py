@@ -34,6 +34,8 @@ BOARD_LEFT_EDGE = BOARD_PAD + BOLD_WIDTH
 
 INPUT_RECT_COORDS = [BOARD_RIGHT_EDGE + BOARD_PAD, BOARD_PAD]
 INPUT_RECT_LEN = 100
+INPUT_TEXT_OFFSET_X = 17
+INPUT_TEXT_OFFSET_Y = 5
 INPUT_RECT_HEIGHT = CELL_DIMENSION
 INPUT_TEXT_COORDS = (INPUT_RECT_COORDS[X_INDEX] + 17, INPUT_RECT_COORDS[Y_INDEX] + 3)
 
@@ -85,7 +87,6 @@ def draw_board(clicked_cell):
     
     # If there is a clicked cell highlight it
     if clicked_cell != -1:
-        #highlight_cell(cell_coords(clicked_cell))
         draw_rect(cell_coords(clicked_cell), GREY, BOLD_WIDTH, CELL_DIMENSION, CELL_DIMENSION)
 
  
@@ -324,6 +325,16 @@ def draw_rect(pos, colour, line_width, len, height):
     pygame.draw.rect(WIN, colour, bottom_rect)
     pygame.draw.rect(WIN, colour, right_rect)
 
-def render_user_input(user_input):
-    text = NUM_FONT.render(user_input, True, BLACK)
-    WIN.blit(text, INPUT_TEXT_COORDS)
+def render_user_input(user_input, clicked_cell):
+    """
+    Draw the user's input
+    param user_input: the user's input
+    param clicked_cell: the current cell clicked on
+    """
+
+    text = NUM_FONT.render(user_input, True, GREY)
+
+    # If a cell is clicked draw the user input
+    if clicked_cell != -1:
+        WIN.blit(text,[cell_coords(clicked_cell)[X_INDEX] + INPUT_TEXT_OFFSET_X, 
+                cell_coords(clicked_cell)[Y_INDEX] + INPUT_TEXT_OFFSET_Y])

@@ -4,6 +4,8 @@ import sudoku_gui
 import pygame
 
 FPS = 60
+MAX_INPUT_LEN = 1
+EVENT_KEY_1_OFFEST = 48
 
 
 def main(grid):
@@ -20,11 +22,11 @@ def main(grid):
     for i in range(sudoku_gui.NUM_CELLS):
         user_grid[i] = grid[i]
 
-    
-    # Solve the sudoku
-    sudoku_solver.solve_sudoku(grid)
-    
     print(user_grid)
+
+    # Solve the sudoku
+    #sudoku_solver.solve_sudoku(grid)
+    
     run = True 
 
     clock = pygame.time.Clock()
@@ -37,9 +39,7 @@ def main(grid):
 
         # Draw the board of the sudoku
         sudoku_gui.draw_game(clicked_cell)
-        sudoku_gui.draw_rect(sudoku_gui.INPUT_RECT_COORDS, sudoku_gui.BLACK, sudoku_gui.BOLD_WIDTH, sudoku_gui.INPUT_RECT_LEN, 
-                             sudoku_gui.INPUT_RECT_HEIGHT)
-        sudoku_gui.render_user_input(user_input)
+        sudoku_gui.render_user_input(user_input, clicked_cell)
 
         # Draw the known numbers in the board
         sudoku_gui.fill_grid(user_grid)
@@ -59,15 +59,19 @@ def main(grid):
 
             # Check if a key was pressed
             if event.type == pygame.KEYDOWN:
+
                 # If backspace is pressed remove the last character
                 if event.key == pygame.K_BACKSPACE:
                     user_input = user_input[:-1]
-                # Add the character to the user input
-                else:
+                # Add the character to the user input if the input isn't already at max length and it is valid
+                elif (event.key in range(pygame.K_1, pygame.K_9 + 1)) and (len(user_input) < MAX_INPUT_LEN) \
+                    and sudoku_solver.is_insertion_valid(grid, clicked_cell, int(event.key) - EVENT_KEY_1_OFFEST):
                     user_input += event.unicode 
 
+                    # Add the input to the grid
+                    grid[clicked_cell] = int(event.key) - EVENT_KEY_1_OFFEST
+                    print(grid)
 
-        
         pygame.display.update()
 
         

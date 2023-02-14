@@ -41,7 +41,7 @@ def is_row_valid(grid, index, num):
     return False: if the insertion is invalid
     """
 
-    row = int(index / sudoku_gui.GRID_SIZE)
+    row = index // sudoku_gui.GRID_SIZE
 
     # Iterate through every element in the row and determine if the number is already 
     # in the row
