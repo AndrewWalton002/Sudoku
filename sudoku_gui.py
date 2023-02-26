@@ -177,7 +177,7 @@ def draw_game(clicked_cell):
     draw_board(clicked_cell)
 
 
-def fill_grid(grid):
+def fill_grid(grid, user_filled_grid):
     """
     Fill the known cells in the sudoku with the elements
     param grid: the elements of the grid in a list
@@ -188,10 +188,17 @@ def fill_grid(grid):
 
     for i in range(NUM_CELLS):
         
-        # If the current cell is filled draw it
+        # Fill in the original grid with black numbers
         if grid[i]:
             num = NUM_FONT.render(str(grid[i]), 1, BLACK)
             WIN.blit(num, (x_coord, y_coord))
+
+        # If the user has put a valid value in the grid draw it in a grey
+        elif user_filled_grid[i] != grid[i]:
+            num = NUM_FONT.render(str(user_filled_grid[i]), 1, GREY)
+            WIN.blit(num, (x_coord, y_coord))
+
+
         
         # If there is another element in the row increase the x cooridinate
         if (i + 1) % GRID_SIZE:
@@ -324,17 +331,3 @@ def draw_rect(pos, colour, line_width, len, height):
     pygame.draw.rect(WIN, colour, left_rect)
     pygame.draw.rect(WIN, colour, bottom_rect)
     pygame.draw.rect(WIN, colour, right_rect)
-
-def render_user_input(user_input, clicked_cell):
-    """
-    Draw the user's input
-    param user_input: the user's input
-    param clicked_cell: the current cell clicked on
-    """
-
-    text = NUM_FONT.render(user_input, True, GREY)
-
-    # If a cell is clicked draw the user input
-    if clicked_cell != -1:
-        WIN.blit(text,[cell_coords(clicked_cell)[X_INDEX] + INPUT_TEXT_OFFSET_X, 
-                cell_coords(clicked_cell)[Y_INDEX] + INPUT_TEXT_OFFSET_Y])
