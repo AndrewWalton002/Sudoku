@@ -22,10 +22,9 @@ def main(grid):
     for i in range(sudoku_gui.NUM_CELLS):
         user_grid[i] = grid[i]
 
-    #print(user_grid)
 
     # Solve the sudoku
-    #sudoku_solver.solve_sudoku(grid)
+    #sudoku_solver.solve_sudoku(user_grid)
     
     run = True 
 
@@ -51,10 +50,18 @@ def main(grid):
                 pygame.quit()
                 return
             
-            # If a mouse was clicked determine if it was in a cell in the board
+            # If a mouse was clicked determine its position
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 pos = pygame.mouse.get_pos()
+
+                # If the mouse was clicked within the give up rectangle, solve the sudoku
+                if sudoku_gui.GIVE_UP_RECT.collidepoint(event.pos):
+                    sudoku_solver.solve_sudoku(user_grid)
+
+                # Determine if the mouse was clicked within the grid and which cell it was clicked on
                 clicked_cell = sudoku_gui.find_clicked_cell(pos)
+
+                # Reset user input
                 user_input = ""
 
             # Check if a key was pressed
@@ -72,9 +79,6 @@ def main(grid):
                     # Add the input to the grid
                     user_grid[clicked_cell] = int(event.key) - EVENT_KEY_1_OFFEST
 
-                    
-        #print("grid", grid)
-        #print("user_grid", user_grid)
         pygame.display.update()
 
         

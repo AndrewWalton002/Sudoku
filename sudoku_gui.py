@@ -32,12 +32,15 @@ BOARD_RIGHT_EDGE = BOARD_PAD + GRID_SIZE * CELL_DIMENSION + (NUM_BOLD_LINES - 1)
 BOARD_TOP_EDGE = BOARD_PAD + BOLD_WIDTH
 BOARD_LEFT_EDGE = BOARD_PAD + BOLD_WIDTH
 
-INPUT_RECT_COORDS = [BOARD_RIGHT_EDGE + BOARD_PAD, BOARD_PAD]
-INPUT_RECT_LEN = 100
-INPUT_TEXT_OFFSET_X = 17
-INPUT_TEXT_OFFSET_Y = 5
-INPUT_RECT_HEIGHT = CELL_DIMENSION
-INPUT_TEXT_COORDS = (INPUT_RECT_COORDS[X_INDEX] + 17, INPUT_RECT_COORDS[Y_INDEX] + 3)
+GIVE_UP_WIDTH = 162
+GIVE_UP_HEIGHT = 45
+GIVE_UP_COORD_X = BOARD_RIGHT_EDGE + int(0.5 * (WIDTH - BOARD_RIGHT_EDGE - GIVE_UP_WIDTH))
+GIVE_UP_COORD_Y = 40
+GIVE_UP_TEXT = "GIVE UP"
+GIVE_UP_RECT = pygame.Rect(GIVE_UP_COORD_X, GIVE_UP_COORD_Y,GIVE_UP_WIDTH, GIVE_UP_HEIGHT)
+
+
+
 
 
 # Define the fonts for sudoku
@@ -175,6 +178,7 @@ def draw_game(clicked_cell):
 
     WIN.fill(WHITE)
     draw_board(clicked_cell)
+    draw_give_up_rect()
 
 
 def fill_grid(grid, user_filled_grid):
@@ -331,3 +335,15 @@ def draw_rect(pos, colour, line_width, len, height):
     pygame.draw.rect(WIN, colour, left_rect)
     pygame.draw.rect(WIN, colour, bottom_rect)
     pygame.draw.rect(WIN, colour, right_rect)
+
+def draw_give_up_rect():
+    """
+    Create the rectangle that acts as the give up button
+    """
+
+    # Draw the rectangle
+    draw_rect([GIVE_UP_COORD_X, GIVE_UP_COORD_Y], BLACK, BOLD_WIDTH, GIVE_UP_WIDTH, GIVE_UP_HEIGHT)
+    give_up_render = NUM_FONT.render(GIVE_UP_TEXT, 1, BLACK)
+
+    # Draw the text
+    WIN.blit(give_up_render, (GIVE_UP_COORD_X + 3, GIVE_UP_COORD_Y))
