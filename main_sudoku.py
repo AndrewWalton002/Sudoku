@@ -23,7 +23,6 @@ def main():
     grid = [None] * sudoku_gui.NUM_CELLS
 
 
-    grid = sudoku_web_scrape.get_data(sudoku_web_scrape.HARD)
 
 
     # Create a copy of the unfilled grid
@@ -72,6 +71,26 @@ def main():
                         user_grid[i] = grid[i]
 
                     sudoku_solver.solve_sudoku(user_grid)
+                
+                # If one of the difficulty buttons is pressed change to that difficulty
+                if sudoku_gui.EASY_RECT.collidepoint(event.pos):
+                    grid = sudoku_web_scrape.get_data(sudoku_web_scrape.EASY)
+                     # Create a copy of the unfilled grid
+                    for i in range(sudoku_gui.NUM_CELLS):
+                        user_grid[i] = grid[i]
+
+                if sudoku_gui.MED_RECT.collidepoint(event.pos):
+                    grid = sudoku_web_scrape.get_data(sudoku_web_scrape.MED)
+                    # Create a copy of the unfilled grid
+                    for i in range(sudoku_gui.NUM_CELLS):
+                        user_grid[i] = grid[i]
+
+                if sudoku_gui.HARD_RECT.collidepoint(event.pos):
+                    grid = sudoku_web_scrape.get_data(sudoku_web_scrape.HARD)
+                    # Create a copy of the unfilled grid
+                    for i in range(sudoku_gui.NUM_CELLS):
+                        user_grid[i] = grid[i]
+
                     
                 # Determine if the mouse was clicked within the grid and which cell it was clicked on
                 clicked_cell = sudoku_gui.find_clicked_cell(pos)
@@ -97,12 +116,5 @@ def main():
 
         pygame.display.update()
 
-        
-
-
-
 if __name__ == "__main__":
     main()
-
-
-

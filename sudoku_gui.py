@@ -1,8 +1,6 @@
-from calendar import c
-from tkinter.font import BOLD
-from turtle import right
 import pygame
 from sudoku_solver import *
+import sudoku_web_scrape
 
 pygame.font.init()
 
@@ -32,16 +30,23 @@ BOARD_RIGHT_EDGE = BOARD_PAD + GRID_SIZE * CELL_DIMENSION + (NUM_BOLD_LINES - 1)
 BOARD_TOP_EDGE = BOARD_PAD + BOLD_WIDTH
 BOARD_LEFT_EDGE = BOARD_PAD + BOLD_WIDTH
 
-GIVE_UP_WIDTH = 162
-GIVE_UP_HEIGHT = 45
-GIVE_UP_COORD_X = BOARD_RIGHT_EDGE + int(0.5 * (WIDTH - BOARD_RIGHT_EDGE - GIVE_UP_WIDTH))
-GIVE_UP_COORD_Y = 40
+# Define the coordinates and dimensions of the rectangles used for buttons
+BUTTON_WIDTH = 162
+BUTTON_HEIGHT = 45
+BUTTON_COORD_X = BOARD_RIGHT_EDGE + int(0.5 * (WIDTH - BOARD_RIGHT_EDGE - BUTTON_WIDTH))
+OG_BUTTON_COORD_Y = 40
+BUTTON_Y_OFFSET = 100
 GIVE_UP_TEXT = "GIVE UP"
-GIVE_UP_RECT = pygame.Rect(GIVE_UP_COORD_X, GIVE_UP_COORD_Y,GIVE_UP_WIDTH, GIVE_UP_HEIGHT)
+EASY_BUTTON_NUM = 1
+MED_BUTTON_NUM = 2
+HARD_BUTTON_NUM = 3
+TEXT_OFFSET = 3
 
-
-
-
+# Define the rectangles that are used as buttons
+GIVE_UP_RECT = pygame.Rect(BUTTON_COORD_X, OG_BUTTON_COORD_Y ,BUTTON_WIDTH, BUTTON_HEIGHT)
+EASY_RECT = pygame.Rect(BUTTON_COORD_X, OG_BUTTON_COORD_Y + EASY_BUTTON_NUM * BUTTON_Y_OFFSET ,BUTTON_WIDTH, BUTTON_HEIGHT)
+MED_RECT = pygame.Rect(BUTTON_COORD_X, OG_BUTTON_COORD_Y + MED_BUTTON_NUM * BUTTON_Y_OFFSET, BUTTON_WIDTH, BUTTON_HEIGHT)
+HARD_RECT = pygame.Rect(BUTTON_COORD_X, OG_BUTTON_COORD_Y + HARD_BUTTON_NUM * BUTTON_Y_OFFSET, BUTTON_WIDTH, BUTTON_HEIGHT)
 
 # Define the fonts for sudoku
 NUM_FONT = pygame.font.SysFont("Times New Roman", 40)
@@ -55,7 +60,6 @@ GREEN = (0, 255, 0)
 # Create the pygame display and title it
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Sudoku")
-
 
 def draw_board(clicked_cell):
     """
@@ -179,7 +183,15 @@ def draw_game(clicked_cell):
 
     WIN.fill(WHITE)
     draw_board(clicked_cell)
-    draw_give_up_rect()
+    #draw_give_up_rect()
+    draw_button_rect([BUTTON_COORD_X, OG_BUTTON_COORD_Y], BLACK, BOLD_WIDTH, BUTTON_WIDTH, BUTTON_HEIGHT, GIVE_UP_TEXT)
+
+    draw_button_rect([BUTTON_COORD_X, OG_BUTTON_COORD_Y + EASY_BUTTON_NUM * BUTTON_Y_OFFSET], BLACK, BOLD_WIDTH, BUTTON_WIDTH,
+                    BUTTON_HEIGHT, sudoku_web_scrape.EASY)
+    draw_button_rect([BUTTON_COORD_X, OG_BUTTON_COORD_Y + MED_BUTTON_NUM * BUTTON_Y_OFFSET], BLACK, BOLD_WIDTH, BUTTON_WIDTH,
+                    BUTTON_HEIGHT, sudoku_web_scrape.MED)
+    draw_button_rect([BUTTON_COORD_X, OG_BUTTON_COORD_Y + HARD_BUTTON_NUM * BUTTON_Y_OFFSET], BLACK, BOLD_WIDTH, BUTTON_WIDTH,
+                    BUTTON_HEIGHT, sudoku_web_scrape.HARD)
 
 
 def fill_grid(grid, user_filled_grid):
@@ -202,9 +214,7 @@ def fill_grid(grid, user_filled_grid):
         elif user_filled_grid[i] != grid[i]:
             num = NUM_FONT.render(str(user_filled_grid[i]), 1, GREY)
             WIN.blit(num, (x_coord, y_coord))
-        
-
-        
+         
         # If there is another element in the row increase the x cooridinate
         if (i + 1) % GRID_SIZE:
             if (i + 1) % SQUARE_SIZE:
@@ -220,10 +230,7 @@ def fill_grid(grid, user_filled_grid):
                 y_coord += CELL_DIMENSION + LINE_WIDTH
             else:
                 y_coord += CELL_DIMENSION + BOLD_WIDTH
-
-
-
-    
+  
 def find_clicked_cell(pos):
     """
     Determines if the mouse click occured in a cell within the board
@@ -337,14 +344,16 @@ def draw_rect(pos, colour, line_width, len, height):
     pygame.draw.rect(WIN, colour, bottom_rect)
     pygame.draw.rect(WIN, colour, right_rect)
 
-def draw_give_up_rect():
+
+
+def draw_button_rect(coords, colour, line_width, width, height, text):
     """
-    Create the rectangle that acts as the give up button
+    Create the rectangle that acts as a button
     """
 
     # Draw the rectangle
-    draw_rect([GIVE_UP_COORD_X, GIVE_UP_COORD_Y], BLACK, BOLD_WIDTH, GIVE_UP_WIDTH, GIVE_UP_HEIGHT)
-    give_up_render = NUM_FONT.render(GIVE_UP_TEXT, 1, BLACK)
+    draw_rect(coords, colour, line_width, width, height)
+    text_render = NUM_FONT.render(text, 1, colour)
 
     # Draw the text
-    WIN.blit(give_up_render, (GIVE_UP_COORD_X + 3, GIVE_UP_COORD_Y))
+    WIN.blit(text_render, (coords[X_INDEX] + TEXT_OFFSET, coords[Y_INDEX]))
