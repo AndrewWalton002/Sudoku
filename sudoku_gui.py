@@ -50,6 +50,7 @@ NUM_FONT = pygame.font.SysFont("Times New Roman", 40)
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 GREY = (128, 128, 128)
+GREEN = (0, 255, 0)
 
 # Create the pygame display and title it
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -201,7 +202,7 @@ def fill_grid(grid, user_filled_grid):
         elif user_filled_grid[i] != grid[i]:
             num = NUM_FONT.render(str(user_filled_grid[i]), 1, GREY)
             WIN.blit(num, (x_coord, y_coord))
-
+        
 
         
         # If there is another element in the row increase the x cooridinate

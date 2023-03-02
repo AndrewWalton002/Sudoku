@@ -1,5 +1,6 @@
 import sudoku_solver
 import sudoku_gui
+import sudoku_web_scrape
 
 import pygame
 
@@ -8,19 +9,29 @@ MAX_INPUT_LEN = 1
 EVENT_KEY_1_OFFEST = 48
 
 
-def main(grid):
+def main():
     """
     Runs the sudoku game
     params grid: the sudoku game in a list
     """
     
+
     clicked_cell = -1
     user_input = ""
 
     user_grid = [None] * sudoku_gui.NUM_CELLS
+    grid = [None] * sudoku_gui.NUM_CELLS
+
+
+    grid = sudoku_web_scrape.get_data(sudoku_web_scrape.HARD)
+
+
     # Create a copy of the unfilled grid
     for i in range(sudoku_gui.NUM_CELLS):
         user_grid[i] = grid[i]
+        #solver_grid[i] = grid[i]
+
+   
 
 
     # Solve the sudoku
@@ -53,11 +64,15 @@ def main(grid):
             # If a mouse was clicked determine its position
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 pos = pygame.mouse.get_pos()
-
+            
                 # If the mouse was clicked within the give up rectangle, solve the sudoku
                 if sudoku_gui.GIVE_UP_RECT.collidepoint(event.pos):
-                    sudoku_solver.solve_sudoku(user_grid)
+                    # Reset the user grid
+                    for i in range(sudoku_gui.NUM_CELLS):
+                        user_grid[i] = grid[i]
 
+                    sudoku_solver.solve_sudoku(user_grid)
+                    
                 # Determine if the mouse was clicked within the grid and which cell it was clicked on
                 clicked_cell = sudoku_gui.find_clicked_cell(pos)
 
@@ -71,6 +86,7 @@ def main(grid):
                 if event.key == pygame.K_BACKSPACE:
                     user_input = user_input[:-1]
                     user_grid[clicked_cell] = 0
+
                 # Add the character to the user input if the input isn't already at max length and it is valid
                 elif (event.key in range(pygame.K_1, pygame.K_9 + 1)) and (len(user_input) < MAX_INPUT_LEN) \
                     and sudoku_solver.is_insertion_valid(grid, clicked_cell, int(event.key) - EVENT_KEY_1_OFFEST):
@@ -84,19 +100,9 @@ def main(grid):
         
 
 
-if __name__ == "__main__":
-    # Grid input in a nested list
-    grid = [0, 1, 8, 0, 0, 2, 3, 0, 4, \
-        0, 0, 3, 5, 0, 0, 0, 0, 0, \
-        5, 2, 4, 8, 9, 0, 0, 0, 0, \
-        1, 0, 5, 0, 7, 0, 4, 0, 6, \
-        0, 0, 7, 0, 0, 0, 9, 0, 0, \
-        2, 0, 9, 0, 4, 0, 5, 0, 8, \
-        0, 0, 0, 0, 8, 9, 6, 4, 3, \
-        0, 0, 0, 0, 0, 7, 2, 0, 0, \
-        3, 0, 1, 6, 0, 0, 7, 8, 0]
 
-    main(grid)
+if __name__ == "__main__":
+    main()
 
 
 

@@ -115,6 +115,7 @@ def solve_sudoku(grid):
     return Flase: if the sudoku cannot be solved
     """
 
+    
     index = find_empty_cell(grid)
     
     # If the sudoku is full return True
