@@ -1,9 +1,3 @@
-
-# New York times today's sudoku's 
-'https://www.nytimes.com/puzzles/sudoku/easy'
-'https://www.nytimes.com/puzzles/sudoku/medium'
-'https://www.nytimes.com/puzzles/sudoku/hard'
-
 import requests
 from bs4 import BeautifulSoup
 import json
@@ -14,11 +8,7 @@ HARD = "hard"
 SUDOKU_BOARD_HTML_INDEX = 1
 CONTENT_INDEX = 0
 HTML_FILLER_SIZE = 18
-
 NYT_URL = "https://www.nytimes.com/puzzles/sudoku/easy"
-
-
-
 
 def get_data(difficulty):
     """
@@ -50,5 +40,3 @@ def get_data(difficulty):
 
     # Return the information about the sudoku
     return json_info[difficulty]["puzzle_data"]["puzzle"]
-            
-        

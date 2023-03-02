@@ -1,13 +1,11 @@
 import sudoku_solver
 import sudoku_gui
 import sudoku_web_scrape
-
 import pygame
 
 FPS = 60
 MAX_INPUT_LEN = 1
 EVENT_KEY_1_OFFEST = 48
-
 
 def main():
     """
@@ -15,26 +13,15 @@ def main():
     params grid: the sudoku game in a list
     """
     
-
     clicked_cell = -1
     user_input = ""
 
     user_grid = [None] * sudoku_gui.NUM_CELLS
     grid = [None] * sudoku_gui.NUM_CELLS
 
-
-
-
     # Create a copy of the unfilled grid
     for i in range(sudoku_gui.NUM_CELLS):
         user_grid[i] = grid[i]
-        #solver_grid[i] = grid[i]
-
-   
-
-
-    # Solve the sudoku
-    #sudoku_solver.solve_sudoku(user_grid)
     
     run = True 
 

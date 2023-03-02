@@ -183,7 +183,8 @@ def draw_game(clicked_cell):
 
     WIN.fill(WHITE)
     draw_board(clicked_cell)
-    #draw_give_up_rect()
+
+    # Draw the buttons for giving up and changing difficulties
     draw_button_rect([BUTTON_COORD_X, OG_BUTTON_COORD_Y], BLACK, BOLD_WIDTH, BUTTON_WIDTH, BUTTON_HEIGHT, GIVE_UP_TEXT)
 
     draw_button_rect([BUTTON_COORD_X, OG_BUTTON_COORD_Y + EASY_BUTTON_NUM * BUTTON_Y_OFFSET], BLACK, BOLD_WIDTH, BUTTON_WIDTH,
@@ -222,8 +223,7 @@ def fill_grid(grid, user_filled_grid):
             else:
                 x_coord += CELL_DIMENSION + BOLD_WIDTH
 
-        # If it is the end of a row reset the x cooridinate and increase 
-        # y cooridnate
+        # If it is the end of a row reset the x cooridinate and increase y cooridnate
         else:
             x_coord = OG_X_COORD
             if (i + 1) % (SQUARE_SIZE * GRID_SIZE):
@@ -248,6 +248,7 @@ def find_clicked_cell(pos):
     x_coord = pos[X_INDEX] - BOARD_LEFT_EDGE
     y_coord = pos[Y_INDEX] - BOARD_TOP_EDGE
     
+    # Initalise the number of lines above and to the left of the cells
     normal_lines_to_left = 0
     normal_lines_above = 0
     bold_lines_to_left = 0
@@ -277,7 +278,6 @@ def find_clicked_cell(pos):
                 bold_lines_above += 1
         
         # Check if the click is on a normal line
-        # COULD MAKE BETTER WITH CHECK ON LINE THICKNESS
         else: 
 
             line_check = (i + 1) * CELL_DIMENSION + i + (BOLD_WIDTH - 1) * (i % SQUARE_SIZE)
